@@ -10,7 +10,7 @@ const MovieDetails = () => {
 
   return (
     <div>
-      <button>Go Back</button>
+      <Link to="/">Go Back</Link>
       <img />
       <span>Description: {movieId}</span>
       <p>Additional information</p>
