@@ -1,0 +1,30 @@
+.addInfo {
+  margin-left: 20px;
+}
+
+.details:hover {
+  color: #9985e9;
+}
+
+.goBackBtn {
+  margin-left: 15px;
+  width: 90px;
+  height: 40px;
+  border: 1px solid #9985e9;
+  background-color: #e0e3e8;
+  border-radius: 4px;
+}
+
+.goBackBtn:hover {
+  border: 1px solid #754bd0;
+  background-color: #9985e9;
+  color: white;
+}
+
+.goBackLink {
+  align-items: center;
+  gap: 5px;
+  text-decoration: none;
+  color: black;
+  font-size: 15px;
+}

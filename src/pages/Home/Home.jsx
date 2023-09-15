@@ -1,29 +1,53 @@
-import { React, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { useSearchParams } from 'react-router-dom';
+import { React, useEffect, useState } from 'react';
+import { getMovies } from 'components/services/fetchMoviesApi.js';
+import { Link, useLocation } from 'react-router-dom';
+import css from './Home.module.css';
 
-const Home = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const movieId = searchParams.get('movieId');
-  const movies = ['movie-1', 'movie-2', 'movie-3', 'movie-4', ' movie-5'];
-  const visibleMovie = movies.filter(movie => movie.includes(movieId));
-  // useEffect(()={
-  //HTTP запрос
-  // },[movieId])
+const Home = ({ movies }) => {
+  const location = useLocation();
+  const [trendingMovies, setTrendingMovies] = useState(null);
+
+  useEffect(() => {
+    getMovies()
+      .then(data => {
+        setTrendingMovies(data.results);
+      })
+      .catch(console.log);
+  }, []);
 
   return (
     <div>
-      <h2>Trending today</h2>
-
-      <div>
-        {movies.map(movie => {
-          return (
-            <Link key={movie} to={`${movie}`}>
-              {movie}
-            </Link>
-          );
-        })}
-      </div>
+      {trendingMovies && (
+        <>
+          <h2 className={css.trendsTitle}>Trending movies today</h2>
+          <ul>
+            {trendingMovies.map(({ title, id }) => (
+              <li key={id} className={css.movie}>
+                <Link to={`/movies/${id}`} state={{ from: location }}>
+                  {title}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+      {movies && (
+        <>
+          <ul>
+            {movies.map(({ title, id }) => (
+              <li key={id} className={css.movie}>
+                <Link
+                  className={css.movieLink}
+                  to={`/movies/${id}`}
+                  state={{ from: location }}
+                >
+                  {title}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
     </div>
   );
 };

@@ -1,0 +1,13 @@
+.trendsTitle {
+  margin-left: 15px;
+}
+
+.movie {
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 15px;
+}
+
+.movie:hover {
+  color: #9985e9;
+}

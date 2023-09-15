@@ -1,0 +1,16 @@
+.trendsTitle {
+  font-size: 40px;
+  font-weight: 8000;
+  margin-left: 15px;
+  color: #754bd0;
+}
+
+.movie {
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 15px;
+}
+
+.movie:hover {
+  color: #9985e9;
+}

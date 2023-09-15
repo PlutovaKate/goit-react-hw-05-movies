@@ -1,45 +1,65 @@
-// import { React, useState, useEffect } from 'react';
-import { useLocation, useSearchParams } from 'react-router-dom';
-import { Link } from 'react-router-dom';
-// import css from './Movies.module.css';
+import { React, useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { getMoviesBySearch } from 'components/services/fetchMoviesApi';
+import MoviesList from 'components/MoviesList/MoviesList';
+import css from './Movies.module.css';
 
 const Movies = () => {
-  const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   const movieId = searchParams.get('movieId') ?? '';
-  const movies = ['movie-1', 'movie-2', 'movie-3', 'movie-4', ' movie-5'];
+  const [movies, setMovies] = useState(null);
+  const [totalMovies, setTotalMovies] = useState(null);
+  const [inputSearch, setInputSearch] = useState(movieId);
 
-  // useEffect(()={
-  // HTTP запрос
-  // },[movieId])
+  useEffect(() => {
+    setMovies(null);
+    setTotalMovies(null);
 
-  const updateQueryString = evt => {
-    const movieIdValue = evt.target.value;
-    if (movieIdValue === '') {
-      return setSearchParams({});
-    }
-    setSearchParams({ movieId: movieIdValue });
+    getMoviesBySearch(movieId)
+      .then(data => {
+        setMovies(data.results);
+        setTotalMovies(data.total_results);
+      })
+      .catch(console.log);
+  }, [movieId]);
+
+  const handleInputChange = evt => {
+    setInputSearch(evt.currentTarget.value);
   };
 
-  const visibleMovie = movies.filter(movie => movie.includes(movieId));
+  const handleFormSubmit = evt => {
+    evt.preventDefault();
+    const movieIdValue = evt.target;
+    const movieIdNormalized = movieIdValue.movieId.value.toLowerCase().trim();
 
-  console.log(location);
+    if (movieIdNormalized === '') {
+      return setSearchParams({});
+    }
+    setSearchParams({ movieId: movieIdNormalized });
+    movieIdValue.reset();
+  };
+
   return (
-    <div>
-      <form>
-        <input onChange={updateQueryString} value={movieId} type="text" />
-        <button onClick={() => setSearchParams({ c: 'hello' })}>Search</button>
+    <>
+      <form onSubmit={handleFormSubmit} className={css.form}>
+        <input
+          type="text"
+          name="movieId"
+          className={css.input}
+          onChange={handleInputChange}
+          value={inputSearch}
+        />
+
+        <button type="submit" className={css.submit}>
+          Search
+        </button>
       </form>
-      <div>
-        {visibleMovie.map(movie => {
-          return (
-            <Link key={movie} to={`${movie}`} state={{ from: location }}>
-              {movie}
-            </Link>
-          );
-        })}
-      </div>
-    </div>
+
+      {movies && <MoviesList movies={movies} />}
+      {totalMovies === 0 && (
+        <div className={css.noMovies}>Try to find movie</div>
+      )}
+    </>
   );
 };
 
